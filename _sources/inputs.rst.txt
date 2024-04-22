@@ -1,0 +1,20 @@
+Inputs
+######
+
+.. .. csv-table:: [basic]
+..     :header: "Treat", "Quantity", 'Default', "Description"
+..     :widths: 10, 10, 10, 10
+..     :width: 60
+
+..     "calc_code", "1:VASP 2:MATGL", "", "On a stick!"
+..     "algo", "0:RS", "", "If we took the bones out, it wouldn't be
+..     crunchy, now would it?"
+..     "Gannet Ripple", 1.99, "", "On a stick!"
+
+.. toctree::
+   :maxdepth: 1
+   :numbered:
+   :caption: Params:
+
+   calc_code
+

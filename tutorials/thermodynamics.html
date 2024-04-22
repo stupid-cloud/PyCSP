@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3.2. 2. Thermodynamics &mdash; PyCSP v0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f8c80a57"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="3.3. 3. Surface" href="surface.html" />
+    <link rel="prev" title="3.1. 1. Model" href="model.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            PyCSP
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">1. 1 PyCSP的特点，目标和历史</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">2. Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">3. Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="model.html">3.1. 1. Model</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">3.2. 2. Thermodynamics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#thermodynamic-correction">3.2.1. 2.1 Thermodynamic correction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#theory">3.2.1.1. 2.1.1 Theory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#free-gas">3.2.1.2. 2.1.1 Free gas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#adsorbed-gas">3.2.1.3. 2.1.2 Adsorbed gas</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ab-initio-thermodynamics">3.2.2. 2.2 Ab initio thermodynamics</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">3.2.2.1. 2.2.1 Theory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#phase-diagrams-t-p">3.2.2.2. 2.2.2 Phase Diagrams (T-p)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#phase-diagrams-t">3.2.2.3. 2.2.3 Phase Diagrams (T)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#phase-diagrams-p">3.2.2.4. 2.2.4 Phase Diagrams (p)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="surface.html">3.3. 3. Surface</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../inputs.html">4. Inputs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PyCSP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html"><span class="section-number">3. </span>Tutorials</a></li>
+      <li class="breadcrumb-item active"><span class="section-number">3.2. </span>2. Thermodynamics</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/thermodynamics.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="thermodynamics">
+<h1><span class="section-number">3.2. </span>2. Thermodynamics<a class="headerlink" href="#thermodynamics" title="Link to this heading"></a></h1>
+<section id="thermodynamic-correction">
+<h2><span class="section-number">3.2.1. </span>2.1 Thermodynamic correction<a class="headerlink" href="#thermodynamic-correction" title="Link to this heading"></a></h2>
+<section id="theory">
+<h3><span class="section-number">3.2.1.1. </span>2.1.1 Theory<a class="headerlink" href="#theory" title="Link to this heading"></a></h3>
+<p>Pymatsci uses a thermal correction similar to Gaussian, and the detailed thermodynamic derivation can be found in Atkins’ Physical Chemistry.
+The gases are assumed to be indistinguishable perfect gases with no interactions between them. The expressions for the internal energy (U) and entropy (S) of N molecules can be known from statistical thermodynamics:</p>
+<div class="math notranslate nohighlight">
+\[U = Nk{T^2}{\left( {\frac{{\partial \ln q}}{{\partial T}}} \right)_V}\]</div>
+<div class="math notranslate nohighlight">
+\[S =NkT{\left( {\frac{{\partial \ln q}}{{\partial T}}} \right)_V} + Nk\ln \frac{q}{N} + kN\]</div>
+<p>where T is the temperature, V is the volume of the container, q is the partition function, and k is the Boltzmann constant. When considering only one molecule:</p>
+<div class="math notranslate nohighlight">
+\[U = k{T^2}{\left( {\frac{{\partial \ln q}}{{\partial T}}} \right)_V}\]</div>
+<div class="math notranslate nohighlight">
+\[S =kT{\left( {\frac{{\partial \ln q}}{{\partial T}}} \right)_V} + k\ln q + k\]</div>
+<p>Considering the translational (q<sup>t</sup>), rotational (q<sup>r</sup>), vibrational (q<sup>v</sup>), and electron (q<sup>e</sup>) contributions we get</p>
+<div class="math notranslate nohighlight">
+\[q = {q^t}{q^r}{q^v}{q^e}\]</div>
+<p>Therefore,</p>
+<div class="math notranslate nohighlight">
+\[U = {\sum\limits_i {k{T^2}\left( {\frac{{\partial \ln {q_i}}}{{\partial T}}} \right)} _V} = {U_t} + {U_r} + {U_v} + {U_e}\]</div>
+<div class="math notranslate nohighlight">
+\[S = {\sum\limits_i {kT\left( {\frac{{\partial \ln {q_i}}}{{\partial T}}} \right)} _V} + k\ln {q_i} + k = {S_t} + {S_r} + {S_v} + {S_e} + k\]</div>
+<p>Enthalpy (H) and Gibbs free energy (G) can be obtained from U and S:</p>
+<div class="math notranslate nohighlight">
+\[H = U + pV\]</div>
+<div class="math notranslate nohighlight">
+\[G = H - TS\]</div>
+<p>The expression for H seems to be a little trickier, since we don’t know V. However, for an perfect gas, pV=kT. Therefore,</p>
+<div class="math notranslate nohighlight">
+\[H = U + kT\]</div>
+<p>The translational partition function is:</p>
+<div class="math notranslate nohighlight">
+\[q^t = \frac{{(2{\pi}mkT)}^{3/2}}{h^3}V = \frac{{(2{\pi}mkT)}^{3/2}}{h^3}\frac{kT}p\]</div>
+<p>where h is Planck’s constant and m is the molecular mass.</p>
+<p>The rotational partition function of a linear molecule (I<sub>x</sub> = 0, I<sub>y</sub> = I<sub>z</sub>) is</p>
+<div class="math notranslate nohighlight">
+\[{q^r} = \frac{T}{{\sigma {\theta ^r}}}\]</div>
+<div class="math notranslate nohighlight">
+\[{\theta ^r} = \frac{{{h^2}}}{{8{\pi ^2}Ik}}\]</div>
+<p>where σ is the symmetry number, and I (I = I<sub>y</sub>) is the moment of inertia. The rotational partition function of the nonlinear molecule (I<sub>x</sub>, I<sub>y</sub>, I<sub>z</sub> != 0) is</p>
+<div class="math notranslate nohighlight">
+\[q^r = \frac{{\pi}^{1/2}}{\sigma}\left(\frac{T^{3/2}}{(\theta _x^r\theta _y^r\theta _z^r)^{1/2}}\right)\]</div>
+<p>The vibration partition function is</p>
+<div class="math notranslate nohighlight">
+\[q^v = \prod\limits_f \frac{1}{1-{e^{-{hv/kT}}}}\]</div>
+<p>where v is the vibration frequency and f is the vibrational degrees of freedom of the molecule.</p>
+<p>Electrons are generally in the ground state, so the partition function is</p>
+<div class="math notranslate nohighlight">
+\[q^e = g\]</div>
+<p>where g is the degeneracy of the electron ground state, or spin multiplicity.</p>
+<p>Zero-point energy (z=z<sup>t</sup> + z<sup>v</sup>) comes from translational (z<sup>t</sup>) and vibrational (z<sup>v</sup>) contributions. However, the zero-point energy of the translational contribution is negligible, so</p>
+<div class="math notranslate nohighlight">
+\[z \approx z^v = \prod\limits_f 1/2hv\]</div>
+<p>At last, pymatsci will output the corrected DFT energy (E<sub>DFT, c</sub>), internal energy (U<sub>c</sub>), enthalpy (H<sub>c</sub>) and Gibbs free (G<sub>c</sub>),</p>
+<div class="math notranslate nohighlight">
+\[E_{DFT, c} = E_{DFT} + z\]</div>
+<div class="math notranslate nohighlight">
+\[U_c = E_{DFT, c} + U\]</div>
+<div class="math notranslate nohighlight">
+\[H_c = E_{DFT, c} + H\]</div>
+<div class="math notranslate nohighlight">
+\[G_c = E_{DFT, c} + G\]</div>
+<p>where E<sub>DFT</sub> is the energy of density functional calculations.</p>
+<p>[1] P. Atkins, J. De Paula, J. Keeler, Physical Chemistry, 11 ed., Oxford University Press, London, 2018.</p>
+<p>[2] <a class="reference external" href="https://gaussian.com/thermo/">https://gaussian.com/thermo/</a></p>
+<p>[3] V. Wang, N. Xu, J.C. Liu, G. Tang, W.T. Geng, VASPKIT: A User-Friendly Interface Facilitating High-Throughput Computing and Analysis Using VASP Code, Computer Physics Communications 267, 108033 (2021).</p>
+</section>
+<section id="free-gas">
+<h3><span class="section-number">3.2.1.2. </span>2.1.1 Free gas<a class="headerlink" href="#free-gas" title="Link to this heading"></a></h3>
+<p>For free gases, consider translational, rotational, vibrational and electron contributions. For linear molecules, degree of vibrational freedom is 3n - 5, Pymatsci will neglect smallest 5 frequencies. For non-linear molecules, degree of vibrational freedom is 3n - 6,Pymatsci will neglect smallest 6 frequencies. n is the atomic number of the molecule.</p>
+<p><strong>Input</strong></p>
+<p>First you need to put CONTCAR and OUTCAR in the current folder.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymatsci.thermodynamics</span> <span class="kn">import</span> <span class="n">FreeGasCorrection</span>   <span class="c1"># 引入热学修正模块</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">FreeGasCorrection</span><span class="p">(</span><span class="mf">298.15</span><span class="p">,</span> <span class="mi">101325</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>      <span class="c1"># 输入温度(K)、压强(Pa)、是否线型分子，自旋多重度</span>
+<span class="n">t</span><span class="o">.</span><span class="n">correction</span><span class="p">()</span>                             <span class="c1"># 自由分子修正</span>
+<span class="n">t</span><span class="o">.</span><span class="n">printout</span><span class="p">()</span>                                        <span class="c1"># 打印输出</span>
+</pre></div>
+</div>
+<p><strong>Output</strong></p>
+<figure class="align-default">
+<img alt="1" src="../_images/12.png" />
+</figure>
+</section>
+<section id="adsorbed-gas">
+<h3><span class="section-number">3.2.1.3. </span>2.1.2 Adsorbed gas<a class="headerlink" href="#adsorbed-gas" title="Link to this heading"></a></h3>
+<p>For adsorbed molecules, pymatsci uses the calculation method of vaspkit. Unlike gas molecules, adsorbed molecules form chemical bonds with substrate, which limits the translational and rotational freedom of the adsorbed molecules. So the contribution of translation and rotation to entropy and enthalpy is significantly reduced (so called hindered translator / hindered rotor model). This does not mean no translational or rotational contribution.</p>
+<p>One common method is to attribute the translational or rotational part of the contribution to vibration, that is, the 3n vibrations of the surface-adsorbing molecules (except the virtual frequency) are all used to calculate the correction of the thermo energy. Pymatsci neglects the electron motion because of its small contribution and pV can be ignored in condensed phase. Therefore,</p>
+<div class="math notranslate nohighlight">
+\[H = U = U_v\]</div>
+<div class="math notranslate nohighlight">
+\[S = {S_v} + k\]</div>
+<p>The small the vibration frequencies have large contribution to entropy. It is very likely that a small vibration frequency will lead to abnormal entropy and free energy correction. So, it suggests that when the free energy of the surface adsorption molecule is corrected, the contribution of the frequency below 50 cm<sup>-1</sup> is calculated as 50 cm<sup>-1</sup>, and pymatsci also does this.</p>
+<p><strong>Input</strong></p>
+<p>First fix all slab atoms, do frequency calculation for the adsorbed molecule.</p>
+<p>Then, you need to put CONTCAR and OUTCAR in the current folder.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymatsci.thermodynamics</span> <span class="kn">import</span> <span class="n">AdsorbedGasCorrection</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">AdsorbedGasCorrection</span><span class="p">(</span><span class="mf">298.15</span><span class="p">)</span>                      <span class="c1"># 输入温度(K)</span>
+<span class="n">a</span><span class="o">.</span><span class="n">correction</span><span class="p">()</span>                                         <span class="c1"># 吸附分子修正</span>
+<span class="n">a</span><span class="o">.</span><span class="n">printout</span><span class="p">()</span>                                           <span class="c1"># 打印输出</span>
+</pre></div>
+</div>
+<p><strong>Output</strong></p>
+<figure class="align-default">
+<img alt="2" src="../_images/22.png" />
+</figure>
+</section>
+</section>
+<section id="ab-initio-thermodynamics">
+<h2><span class="section-number">3.2.2. </span>2.2 Ab initio thermodynamics<a class="headerlink" href="#ab-initio-thermodynamics" title="Link to this heading"></a></h2>
+<section id="id1">
+<h3><span class="section-number">3.2.2.1. </span>2.2.1 Theory<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>The energy calculated by DFT only gives the energy at zero temperature (T) and zero pressure (p). However, for the real reaction conditions, the interaction of O2 molecules with the U surface requires the consideration of temperature and O2 pressure, which is achieved by using the “ab initio thermodynamics” approach. The Gibbs free energy of adsorption considering temperature and pressure can be described as</p>
+<div class="math notranslate nohighlight">
+\[{G_{{\rm{ads}}}} = {G_{adsorbate{\rm{s}}/slab}} - {G_{slab}} - {\rm{n}}{G_{adsorbates}}  (1)\]</div>
+<p>where n is the number of adsorbates, Gadsorbates/slab is the Gibbs free energy of the adsorbates/slab system, Gslab is the Gibbs free energy of the slab, and Gadsorbates is the Gibbs free energy of the adsorbates.
+The energy calculated by DFT (E) is related to a thermodynamical quantity only in a restricted way, corresponding to the Gibbs free energy at zero temperature and neglecting zero-point vibrations. It is known from physical chemistry that Gibbs free energy can thus be written as</p>
+<div class="math notranslate nohighlight">
+\[G(T,{\rm{p}}) = E + U(T,{\rm{p}}) + pV - TS(T,p)  (2)\]</div>
+<p>In general, the volume effect and the vibration contribution to the Gibbs free energy of the condensed phase are small. On the other hand, for adsorption systems, the adsorption of gas molecules will not significantly change the vibrational modes of the surface, and the contributions from temperature and pressure will be canceled. Therefore, equation (3) can be written as</p>
+<div class="math notranslate nohighlight">
+\[{G_{{\rm{ads}}}} = {E_{adsorbate{\rm{s}}/slab}} - {E_{slab}} - {\rm{n}}{G_{adsorbates}}   (3)\]</div>
+<p>Here is an example of oxygen molecule. The adsorbates considered are O atoms whose chemical potential is half that of gaseous O2 molecules. Assuming that the adsorbed gas is the perfect molecule, the chemical potential of the O atom can be expressed as</p>
+<div class="math notranslate nohighlight">
+\[{\mu _O} = \frac{1}{2}{\mu _{{{\rm{O}}_2}}}(T,p) = \frac{1}{2}\left( {{E_{{O_2}}} + {\mu _{{{\rm{O}}_2}}}(T,{p^\theta }) + kT\ln \left( {\frac{{{p_{{O_2}}}}}{{{p^\theta }}}} \right)} \right)   (4)\]</div>
+<p>where k is the Boltzmann constant. Equation (3) can be further written as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{array}{c}
+{G_{{\rm{ads}}}} = {E_{O/slab}} - {E_{slab}} - n{\mu _O}\\
+ = {E_{O/slab}} - {E_{slab}} - \frac{n}{2}{E_{{O_2}}} - \frac{{\rm{n}}}{2}\left( {{\mu _{{O_2}}}(T,{p^\theta }) + kT\ln (\frac{{{p_{{O_2}}}}}{{{p^\theta }}})} \right)\\
+ = {E_{ads}} - \frac{{\rm{n}}}{2}\left( {{\mu _{{O_2}}}(T,{p^\theta }) + kT\ln (\frac{{{p_{{O_2}}}}}{{{p^\theta }}})} \right)
+\end{array} (7)\end{split}\]</div>
+<p>where Eads is the adsorption energy at 0 K.</p>
+<p>[1] K. Reuter, M. Scheffler, Composition, structure, and stability ofRuO2(110)as a function of oxygen pressure, Phys. Rev. B 65 (3) (2001).</p>
+<p>[2] P. Maldonado, L.Z. Evins, P.M. Oppeneer, Ab Initio Atomistic Thermodynamics of Water Reacting with Uranium Dioxide Surfaces, The Journal of Physical Chemistry C 118 (16) (2014) 8491-8500.</p>
+</section>
+<section id="phase-diagrams-t-p">
+<h3><span class="section-number">3.2.2.2. </span>2.2.2 Phase Diagrams (T-p)<a class="headerlink" href="#phase-diagrams-t-p" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymatsci.thermodynamics</span> <span class="kn">import</span> <span class="n">Abthermodynamics</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">Abthermodynamics</span><span class="p">(</span><span class="s1">&#39;https://janaf.nist.gov/tables/O-029.html&#39;</span><span class="p">)</span>
+<span class="c1"># 多次重复计算不同的数据，综合比较得到最终的相图</span>
+<span class="n">data1</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_Tp</span><span class="p">(</span><span class="mi">3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">16.351</span><span class="p">,</span> <span class="mi">4</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">18.881</span><span class="p">)</span>  <span class="c1"># 输入覆盖度，吸附能，覆盖度，吸附能</span>
+<span class="n">data2</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_Tp</span><span class="p">(</span><span class="mi">3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">16.351</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># 输入覆盖度，吸附能，覆盖度，吸附能</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">))</span>
+<span class="c1"># np.savetxt(&#39;data.txt&#39;, data)  # 保存数据</span>
+</pre></div>
+</div>
+<p><strong>Output</strong></p>
+<figure class="align-default">
+<img alt="3" src="../_images/32.png" />
+</figure>
+</section>
+<section id="phase-diagrams-t">
+<h3><span class="section-number">3.2.2.3. </span>2.2.3 Phase Diagrams (T)<a class="headerlink" href="#phase-diagrams-t" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymatsci.thermodynamics</span> <span class="kn">import</span> <span class="n">Abthermodynamics</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">Abthermodynamics</span><span class="p">(</span><span class="s1">&#39;https://janaf.nist.gov/tables/O-029.html&#39;</span><span class="p">)</span>
+<span class="n">data1</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_T</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.134</span><span class="p">,</span> <span class="mf">0.21</span><span class="p">)</span>  <span class="c1"># 输入覆盖度，吸附能，气体分压</span>
+<span class="n">data2</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_T</span><span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.652</span><span class="p">,</span> <span class="mf">0.21</span><span class="p">)</span>  <span class="c1"># 输入覆盖度，吸附能，气体分压</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">))</span>
+<span class="c1"># np.savetxt(&#39;data.txt&#39;, data)  # 保存数据</span>
+</pre></div>
+</div>
+<p><strong>Output</strong></p>
+<figure class="align-default">
+<img alt="4" src="../_images/42.png" />
+</figure>
+</section>
+<section id="phase-diagrams-p">
+<h3><span class="section-number">3.2.2.4. </span>2.2.4 Phase Diagrams (p)<a class="headerlink" href="#phase-diagrams-p" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymatsci.thermodynamics</span> <span class="kn">import</span> <span class="n">Abthermodynamics</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">Abthermodynamics</span><span class="p">(</span><span class="s1">&#39;https://janaf.nist.gov/tables/O-029.html&#39;</span><span class="p">)</span>
+<span class="n">data1</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_p</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.134</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>  <span class="c1"># 输入覆盖度，吸附能，温度</span>
+<span class="n">data2</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_p</span><span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.652</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>  <span class="c1"># 输入覆盖度，吸附能，温度</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># 打印结果</span>
+</pre></div>
+</div>
+<p><strong>Output</strong></p>
+<figure class="align-default">
+<img alt="5" src="../_images/52.png" />
+</figure>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="model.html" class="btn btn-neutral float-left" title="3.1. 1. Model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="surface.html" class="btn btn-neutral float-right" title="3.3. 3. Surface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, C.L. Qin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

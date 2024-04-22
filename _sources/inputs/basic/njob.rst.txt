@@ -1,0 +1,14 @@
+njob
+****
+
+**njob** = 1|2 [integer]>0
+
+Default **njob** = 1
+
+Description: **njob** determines how the partial occupancies
+
+Tag options:
+
+- **njob** = 1: VASP
+
+- **njob** = 2: MATGL

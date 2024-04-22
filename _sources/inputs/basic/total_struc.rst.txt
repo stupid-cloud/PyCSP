@@ -1,0 +1,14 @@
+total_struc
+***********
+
+**total_struc** = 1|2 [integer]>0
+
+Default **total_struc** = 1
+
+Description: **total_struc** determines how the partial occupancies
+
+Tag options:
+
+- **total_struc** = 1: VASP
+
+- **total_struc** = 2: MATGL

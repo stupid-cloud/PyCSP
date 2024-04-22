@@ -1,0 +1,222 @@
+pymatgen与ASE结构转换
+
+.. code:: python
+    
+    from pymatgen.io.ase import AseAtomsAdaptor
+    structure = Structure.from_file('CONTCAR')
+    atoms = adaptor.get_atoms(slab)
+    structure = read('CONTCAR')
+
+ASE创建不对称表面
+
+ .. code:: python
+
+    structure = read('CONTCAR')
+    slab = surface(structure, [1, 1, 1], 1, vacuum=2)
+    vaccum = 15
+    slab.cell[2, 2] = slab.cell[2, 2] + vaccum - 2*2
+    # print(slab.get_positions())
+    coords = slab.get_positions()
+    z = np.around(coords[:, 2], 5)
+    unique_z = np.unique(z, axis=0)
+    tags_list = []
+    index = 1
+    for j in range(len(z)):
+       for i in range(len(unique_z)):
+           if z[j] == unique_z[i]:
+               tags_list.append(i+1)
+    slab.set_tags(tags_list)
+    layers_num = len(unique_z)
+    print(layers_num)
+    write('POSCAR', slab)
+
+检查任务收敛没
+
+ .. code:: bash
+
+    for i in *-*;do cd $i;echo -n $i;tail -2 OSZICAR | awk 'NR==1 {iter=$2;printf "\t" iter} NR==2 {printf "\t" $2; flag="False";if(iter<300 && $2=="F=") {flag="True"} print "\t" flag}';cd ..;done # 自洽计算
+    for i in *-*;do echo $i;grep required $i/vasp.out;done   # 结构弛豫
+
+提取多个文件的信息
+
+ .. code:: bash
+
+    #!/bin/bash 
+    folder_num=`ls -lh . | grep ^d | wc -l`  # 文件夹的数量
+    echo -e "model\tAslab(A^2)\tEslab(eV)\tEvac-T(eV)\tEvac-B(eV)\tEf(eV)\tNatom" >> data.txt 
+    for i in `seq 1 $folder_num` 
+    do
+        echo -n $i-* >> data.txt
+        cd $i-*
+        awk 'BEGIN {sum=0} {if(NR==3) {i=$1;j=$2;k=$3} if(NR==4) {printf "\t" sqrt((i*$2-j*$1)^2+(i*$3-k*$1)^2+(j*$3-k*$2)^2)}}' CONTCAR >> ../data.txt # 表面积
+        grep without OUTCAR | tail -n 1 | awk '{printf "\t" $7}' >> ../data.txt; # 总能    
+        grep vacuum OUTCAR | awk '{printf "\t" $13 "\t" $14}' >> ../data.txt   # 真空能级
+        grep E-fermi OUTCAR | tail -1 | awk '{printf "\t" $3}' >> ../data.txt    # 费米能级
+        awk 'BEGIN {sum=0} NR==7 {for(i=1;i<=NF;i++) {sum+=$i} printf "\t" sum}' CONTCAR >> ../data.txt   # 原子总数
+        # awk 'NR==7 {for(i=1;i<=NF;i++) {sum+=$i;printf "\t" $i}}' CONTCAR >> ../data.txt  # 获取元素的原子个数
+        echo "" >> ../data.txt
+        cd  ..  
+    done
+
+
+
+    
+
+
+
+
+AIMD提取信息
+
+1.ML-AIMD提取能量
+
+.. code:: bash
+
+    #!/bin/bash
+    awk '/free  energy/ {print}' OUTCAR | 
+    awk '
+        BEGIN     {i=1;buffer="";OFS="\t"}
+        /free  energy   TOTEN/  { print i++,$(NF-1); buffer = ""; next}
+            {
+            if (buffer != "") {
+                print i++,buffer
+                }
+        buffer = $(NF-1)
+                }
+        END       { 
+            if (match($(NF-1), "^free  energy   TOTEN") == 0) {
+                print i, buffer
+                }
+            }
+
+2.提取温度
+
+.. code:: bash
+
+    grep "T=" DS-PAW.log | awk '{print $3}' | awk -F. '{print NR"\t"$1}' > data.txt
+
+
+wulff构建
+
+.. code:: python
+
+    from pymatgen.core.structure import Structure
+    from pymatsci.surface import Wulff
+    model = Structure.from_file('CONTCAR')
+    # UB12
+    miller_list2 = [[1, 1, 1], [1, 1, 0], [1, 0, 0], [2, 2, 1], [2, 1, 1], [2, 1, 0]]
+    E_list2 = [3.149, 3.338, 3.776, 3.382, 3.298, 3.38]
+    wf_list2 = [6.042, 5.59, 5.906, 4.782, 4.625, 4.99]
+    wulff = Wulff(model.lattice, miller_list2, E_list2, wf_list2)
+    print(wulff.miller_list)
+    print(wulff.area_fraction_dict)
+    print(wulff.anisotropy)
+    print(wulff.weighted_surface_energy)
+    print(wulff.wf_anisotropy)
+    print(wulff.weighted_work_function)
+    wulff.show('tab20')
+
+创建不同吸附位点以及吸附方式的吸附模型
+
+.. code:: python
+
+    from pymatsci.surface import get_all_orientation_mol, add_adsorb_mol
+    from pymatsci.processing import get_unique_structure
+    import copy
+    from ase.io import read
+    import os
+    from pymatsci.surface import find_adsorption_site
+    from pymatsci.tools import dict2json
+    from pymatsci.tools import set_velocity_T
+    from pymatsci.tools import ase2pymatgen
+    from pymatgen.io.vasp import Poscar
+    from ase.visualize import view
+    from ase.build import add_adsorbate
+    # 读取slab
+    slab = read('POSCAR')
+
+    mol_list = get_all_orientation_mol('H2O', rot_ang=90)  # 获取所有的旋转分子
+
+    # 设置初始速度
+    for mol in mol_list:
+        mol.set_velocities([[0, 0, -0.001], [0, 0, -0.001], [0, 0, -0.001]])
+    slab = set_velocity_T(slab, 300)
+
+    # 吸附位点确定
+    ads_sites = find_adsorption_site(slab, plot=False)
+    sites_list_tem = ads_sites['all']
+    # add_adsorbate(slab, 'O', position=sites_list[3][:2], height=2)
+    # view(slab)
+    sites_list = []
+    for i in [0, 1, 3]:
+        sites_list.append(sites_list_tem[i])
+    # sites_list = sites_list_tem
+
+    # 获取不同吸附位点，不同吸附方式的slab列表
+    site_slab_list = []
+    for site in sites_list:
+        slab_list = []
+        for mol in mol_list:
+            slab_model = copy.deepcopy(slab)
+            add_adsorb_mol(slab_model, mol, site[:2], 4)
+            slab_model.ads_info = {"ads_site": list(site[:2]), 'rot_ang': list(mol.rot_ang)}
+            slab_list.append(slab_model)
+        site_slab_list.append(slab_list)
+
+    # 删除重复的吸附模型
+    unique_site_slab_list = []
+    for site in site_slab_list:
+        unique_slab_list = get_unique_structure(site)
+        unique_site_slab_list.append(unique_slab_list)
+
+    # 写入文件
+    fold_name = "data"
+    os.mkdir(fold_name)
+    for site in unique_site_slab_list:
+        fold_name2 = os.path.join(fold_name, "{}_{}".format(*site[0].ads_info['ads_site']))
+        os.mkdir(fold_name2)
+        for slab in site:
+            fold_name3 = os.path.join(fold_name2, "{}_{}_{}".format(*slab.ads_info['rot_ang']))
+            os.mkdir(fold_name3)
+            dict2json(os.path.join(fold_name3, 'info.json'), slab.ads_info)
+            velocities = slab.get_velocities()
+            slab = ase2pymatgen(slab)
+            poscar = Poscar(slab, velocities=list(velocities))
+            poscar.write_file(os.path.join(fold_name3, 'POSCAR'))
+
+
+创建不同超胞的吸附模型
+
+.. code:: python
+
+    from pymatsci.surface import add_adsorb_mol
+    import copy
+    import os
+    from pymatsci.processing import dict2json
+    from pymatgen.core.structure import Structure
+    from pymatgen.io.ase import AseAtomsAdaptor
+    from ase.build import molecule
+
+    # 读取文件
+    slab = Structure.from_file('POSCAR')
+    primit_cell = slab.get_primitive_structure()
+    adaptor = AseAtomsAdaptor()
+    mol = molecule('H2O')
+
+    # 创建不同超胞的结构
+    cell_list = []
+    for i in range(1, 4):
+        cell = copy.deepcopy(primit_cell)
+        cell.make_supercell([i, i, 1])
+        cell = adaptor.get_atoms(cell)
+        add_adsorb_mol(cell, mol, [0, 0], 2)
+        cell.info = {"super_cell_num": [i, i]}
+        cell_list.append(cell)
+
+    # 写文件
+    folder_name = "data"
+    os.mkdir(folder_name)
+    for cell in cell_list:
+        folder_name2 = os.path.join(folder_name, "{}_{}".format(*cell.info["super_cell_num"]))
+        os.mkdir(folder_name2)
+        cell.write(os.path.join(folder_name2, 'POSCAR'))
+        dict2json(os.path.join(folder_name2, 'info.json'), cell.info)

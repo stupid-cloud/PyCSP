@@ -1,0 +1,8 @@
+Input and output files
+======================
+
+.. toctree::
+    :maxdepth: 0
+
+    input_file
+    output_file

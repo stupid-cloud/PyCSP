@@ -1,0 +1,88 @@
+1.结构高精度优化（弛豫晶胞和原子） 
+
+2.QHA创建不同体积的文件
+
+.. code:: bash
+
+    # 创建文件，INCAR采用结构优化（只弛豫原子）
+    for i in 0.95 0.96 0.97 0.98 0.99 1 1.01 1.02 1.03 1.04 1.05;do mkdir job-$i;sed -i "2c $i" POSCAR;cp POSCAR job-$i;cp INCAR job-$i;cp KPOINTS job-$i;cp POTCAR job-$i;done
+    # 判断结构优化结束
+    for i in job-*;do echo $i;grep "reached required accuracy" $i/vasp.log;done
+    # 得到 e-v.dat
+    phonopy-vasp-efe --tmax=2000 job-*/vasprun.xml
+    # 创建DFPT相关文件，INCAR采用DFPT
+    for i in job-*;do cd $i;cp CONTCAR POSCAR-unitcell;phonopy -d --dim="3 3 2" -c POSCAR-unitcell;cp ../INCAR .;cp SPOSCAR POSCAR;echo -e '102\n1\n0.04' | vaspkit; cd ..;done
+    # 提取二阶力常数
+    for i in job-*;do cd $i;phonopy --fc vasprun.xml;cd ..;done
+    #提取热性质（thermol.conf）
+    for i in job-*;do cd $i;phonopy -t -p ../thermal.conf;cd ..;done
+    # 提取QHA相关性质
+    phonopy-qha -p e-v.dat job-*/thermal_properties.yaml -s --tmax=2000 --pressure 0.000101325
+    phonopy-qha -p --tmax=1700 --efe fe-v.dat e-v.dat job-*/thermal_properties.yaml -s --pressure 0.000101325 # 包含温度相关的electronic free energy
+
+3.提取声子信息
+
+.. code:: bash
+    
+    # 二阶力常数
+    phonopy --fc vasprun.xml
+    # 能带信息处理（band.conf）
+    phonopy band.conf -p -s
+    # 提取数据绘图
+    phonopy-bandplot  --gnuplot > band.dat
+    # dos (dos.conf)
+    phonopy -c POSCAR-unitcell -s -p dos.conf
+    
+4.声子传输性质
+
+.. code:: bash
+
+    # 创建结构文件，需切换python2
+    thirdorder_vasp.py sow 2 2 2 -10
+    # 创建文件夹，进行scf计算
+    for i in 3RD.POSCAR.*;do s=$(echo $i|cut -d"." -f3);d=job-$s;mkdir $d;cp $i $d/POSCAR;cp INCAR POTCAR KPOINTS $d;done
+    # 收集三阶力常数
+    find job* -name vasprun.xml|sort -n|thirdorder_vasp.py reap 2 2 2 -10
+    # 收敛性测试
+    # shengBTE热输运性质
+    
+
+thermol.conf
+
+.. code:: bash
+
+    FORCE_CONSTANTS = READ
+    MP = 8 8 8
+    DIM = 2 2 2
+    TPROP = .TRUE.
+    TMAX = 1700
+    TSTEP=10
+    CELL_FILENAME = POSCAR-unitcell
+
+band.conf（vaspkit生成）
+
+.. code:: bash
+    
+    # vaspkit获得  305
+    DIM =  2 2 3     
+    BAND = 0.000000 0.000000 0.000000 0.000000 0.500000 0.000000 0.500000 0.500000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.500000 0.000000 0.500000 0.500000 0.500000 0.500000 0.500000 0.000000 0.000000 0.500000, 0.000000 0.500000 0.000000 0.000000 0.500000 0.500000, 0.500000 0.500000 0.000000 0.500000 0.500000 0.500000
+    BAND_LABELS = $\Gamma$ X M $\Gamma$ Z R A Z X R M A
+    BAND_CONNECTION = .TRUE.
+    FORCE_CONSTANTS = READ
+    PRIMITIVE_AXES=Auto  
+    CELL_FILENAME = POSCAR-unitcell
+    GROUP_VELOCITY = .TRUE.
+
+dos.conf
+
+.. code:: bash
+
+    NPOINTS = 501
+    DIM = 2 2 3      
+    MP = 10 10 10
+    FORCE_CONSTANTS = READ
+    DOS = .TRUE.
+    CELL_FILENAME = POSCAR-unitcell
+    # DOS_RANGE = 0 40 0.1
+    # PDOS = AUTO
+    GROUP_VELOCITY = .TRUE.

@@ -1,0 +1,20 @@
+algo
+****
+
+-----------
+
+**algo** = 1|2 [integer]>0
+
+Default **algo** = 1
+
+Description: **algo** determines how the partial occupancies
+
+-------------------------
+
+Tag options:
+
+- **algo** = 1: VASP
+
+- **algo** = 2: MATGL
+
+------------------

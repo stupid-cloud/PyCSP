@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>&lt;no title&gt; &mdash; PyCSP v0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f8c80a57"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            PyCSP
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage/index.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Topic</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PyCSP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">&lt;no title&gt;</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/topic/thermo.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <p>1.结构高精度优化（弛豫晶胞和原子）</p>
+<p>2.QHA创建不同体积的文件</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 创建文件，INCAR采用结构优化（只弛豫原子）</span>
+<span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>.95<span class="w"> </span><span class="m">0</span>.96<span class="w"> </span><span class="m">0</span>.97<span class="w"> </span><span class="m">0</span>.98<span class="w"> </span><span class="m">0</span>.99<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">1</span>.01<span class="w"> </span><span class="m">1</span>.02<span class="w"> </span><span class="m">1</span>.03<span class="w"> </span><span class="m">1</span>.04<span class="w"> </span><span class="m">1</span>.05<span class="p">;</span><span class="k">do</span><span class="w"> </span>mkdir<span class="w"> </span>job-<span class="nv">$i</span><span class="p">;</span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;2c </span><span class="nv">$i</span><span class="s2">&quot;</span><span class="w"> </span>POSCAR<span class="p">;</span>cp<span class="w"> </span>POSCAR<span class="w"> </span>job-<span class="nv">$i</span><span class="p">;</span>cp<span class="w"> </span>INCAR<span class="w"> </span>job-<span class="nv">$i</span><span class="p">;</span>cp<span class="w"> </span>KPOINTS<span class="w"> </span>job-<span class="nv">$i</span><span class="p">;</span>cp<span class="w"> </span>POTCAR<span class="w"> </span>job-<span class="nv">$i</span><span class="p">;</span><span class="k">done</span>
+<span class="c1"># 判断结构优化结束</span>
+<span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span>job-*<span class="p">;</span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$i</span><span class="p">;</span>grep<span class="w"> </span><span class="s2">&quot;reached required accuracy&quot;</span><span class="w"> </span><span class="nv">$i</span>/vasp.log<span class="p">;</span><span class="k">done</span>
+<span class="c1"># 得到 e-v.dat</span>
+phonopy-vasp-efe<span class="w"> </span>--tmax<span class="o">=</span><span class="m">2000</span><span class="w"> </span>job-*/vasprun.xml
+<span class="c1"># 创建DFPT相关文件，INCAR采用DFPT</span>
+<span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span>job-*<span class="p">;</span><span class="k">do</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="nv">$i</span><span class="p">;</span>cp<span class="w"> </span>CONTCAR<span class="w"> </span>POSCAR-unitcell<span class="p">;</span>phonopy<span class="w"> </span>-d<span class="w"> </span>--dim<span class="o">=</span><span class="s2">&quot;3 3 2&quot;</span><span class="w"> </span>-c<span class="w"> </span>POSCAR-unitcell<span class="p">;</span>cp<span class="w"> </span>../INCAR<span class="w"> </span>.<span class="p">;</span>cp<span class="w"> </span>SPOSCAR<span class="w"> </span>POSCAR<span class="p">;</span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;102\n1\n0.04&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>vaspkit<span class="p">;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..<span class="p">;</span><span class="k">done</span>
+<span class="c1"># 提取二阶力常数</span>
+<span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span>job-*<span class="p">;</span><span class="k">do</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="nv">$i</span><span class="p">;</span>phonopy<span class="w"> </span>--fc<span class="w"> </span>vasprun.xml<span class="p">;</span><span class="nb">cd</span><span class="w"> </span>..<span class="p">;</span><span class="k">done</span>
+<span class="c1">#提取热性质（thermol.conf）</span>
+<span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span>job-*<span class="p">;</span><span class="k">do</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="nv">$i</span><span class="p">;</span>phonopy<span class="w"> </span>-t<span class="w"> </span>-p<span class="w"> </span>../thermal.conf<span class="p">;</span><span class="nb">cd</span><span class="w"> </span>..<span class="p">;</span><span class="k">done</span>
+<span class="c1"># 提取QHA相关性质</span>
+phonopy-qha<span class="w"> </span>-p<span class="w"> </span>e-v.dat<span class="w"> </span>job-*/thermal_properties.yaml<span class="w"> </span>-s<span class="w"> </span>--tmax<span class="o">=</span><span class="m">2000</span><span class="w"> </span>--pressure<span class="w"> </span><span class="m">0</span>.000101325
+phonopy-qha<span class="w"> </span>-p<span class="w"> </span>--tmax<span class="o">=</span><span class="m">1700</span><span class="w"> </span>--efe<span class="w"> </span>fe-v.dat<span class="w"> </span>e-v.dat<span class="w"> </span>job-*/thermal_properties.yaml<span class="w"> </span>-s<span class="w"> </span>--pressure<span class="w"> </span><span class="m">0</span>.000101325<span class="w"> </span><span class="c1"># 包含温度相关的electronic free energy</span>
+</pre></div>
+</div>
+<p>3.提取声子信息</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 二阶力常数</span>
+phonopy<span class="w"> </span>--fc<span class="w"> </span>vasprun.xml
+<span class="c1"># 能带信息处理（band.conf）</span>
+phonopy<span class="w"> </span>band.conf<span class="w"> </span>-p<span class="w"> </span>-s
+<span class="c1"># 提取数据绘图</span>
+phonopy-bandplot<span class="w">  </span>--gnuplot<span class="w"> </span>&gt;<span class="w"> </span>band.dat
+<span class="c1"># dos (dos.conf)</span>
+phonopy<span class="w"> </span>-c<span class="w"> </span>POSCAR-unitcell<span class="w"> </span>-s<span class="w"> </span>-p<span class="w"> </span>dos.conf
+</pre></div>
+</div>
+<p>4.声子传输性质</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 创建结构文件，需切换python2</span>
+thirdorder_vasp.py<span class="w"> </span>sow<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">2</span><span class="w"> </span>-10
+<span class="c1"># 创建文件夹，进行scf计算</span>
+<span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span>3RD.POSCAR.*<span class="p">;</span><span class="k">do</span><span class="w"> </span><span class="nv">s</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="nv">$i</span><span class="p">|</span>cut<span class="w"> </span>-d<span class="s2">&quot;.&quot;</span><span class="w"> </span>-f3<span class="k">)</span><span class="p">;</span><span class="nv">d</span><span class="o">=</span>job-<span class="nv">$s</span><span class="p">;</span>mkdir<span class="w"> </span><span class="nv">$d</span><span class="p">;</span>cp<span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="nv">$d</span>/POSCAR<span class="p">;</span>cp<span class="w"> </span>INCAR<span class="w"> </span>POTCAR<span class="w"> </span>KPOINTS<span class="w"> </span><span class="nv">$d</span><span class="p">;</span><span class="k">done</span>
+<span class="c1"># 收集三阶力常数</span>
+find<span class="w"> </span>job*<span class="w"> </span>-name<span class="w"> </span>vasprun.xml<span class="p">|</span>sort<span class="w"> </span>-n<span class="p">|</span>thirdorder_vasp.py<span class="w"> </span>reap<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">2</span><span class="w"> </span>-10
+<span class="c1"># 收敛性测试</span>
+<span class="c1"># shengBTE热输运性质</span>
+</pre></div>
+</div>
+<p>thermol.conf</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">FORCE_CONSTANTS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>READ
+<span class="nv">MP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="m">8</span>
+<span class="nv">DIM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">2</span>
+<span class="nv">TPROP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>.TRUE.
+<span class="nv">TMAX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1700</span>
+<span class="nv">TSTEP</span><span class="o">=</span><span class="m">10</span>
+<span class="nv">CELL_FILENAME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>POSCAR-unitcell
+</pre></div>
+</div>
+<p>band.conf（vaspkit生成）</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># vaspkit获得  305</span>
+<span class="nv">DIM</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="m">2</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span>
+<span class="nv">BAND</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="m">0</span>.500000<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="m">0</span>.500000<span class="w"> </span><span class="m">0</span>.500000<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="m">0</span>.500000<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="m">0</span>.500000<span class="w"> </span><span class="m">0</span>.500000<span class="w"> </span><span class="m">0</span>.500000<span class="w"> </span><span class="m">0</span>.500000<span class="w"> </span><span class="m">0</span>.500000<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="m">0</span>.500000,<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="m">0</span>.500000<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="m">0</span>.500000<span class="w"> </span><span class="m">0</span>.500000,<span class="w"> </span><span class="m">0</span>.500000<span class="w"> </span><span class="m">0</span>.500000<span class="w"> </span><span class="m">0</span>.000000<span class="w"> </span><span class="m">0</span>.500000<span class="w"> </span><span class="m">0</span>.500000<span class="w"> </span><span class="m">0</span>.500000
+<span class="nv">BAND_LABELS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>$<span class="se">\G</span>amma$<span class="w"> </span>X<span class="w"> </span>M<span class="w"> </span>$<span class="se">\G</span>amma$<span class="w"> </span>Z<span class="w"> </span>R<span class="w"> </span>A<span class="w"> </span>Z<span class="w"> </span>X<span class="w"> </span>R<span class="w"> </span>M<span class="w"> </span>A
+<span class="nv">BAND_CONNECTION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>.TRUE.
+<span class="nv">FORCE_CONSTANTS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>READ
+<span class="nv">PRIMITIVE_AXES</span><span class="o">=</span>Auto
+<span class="nv">CELL_FILENAME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>POSCAR-unitcell
+<span class="nv">GROUP_VELOCITY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>.TRUE.
+</pre></div>
+</div>
+<p>dos.conf</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">NPOINTS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">501</span>
+<span class="nv">DIM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span>
+<span class="nv">MP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">10</span>
+<span class="nv">FORCE_CONSTANTS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>READ
+<span class="nv">DOS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>.TRUE.
+<span class="nv">CELL_FILENAME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>POSCAR-unitcell
+<span class="c1"># DOS_RANGE = 0 40 0.1</span>
+<span class="c1"># PDOS = AUTO</span>
+<span class="nv">GROUP_VELOCITY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>.TRUE.
+</pre></div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, C.L. Qin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

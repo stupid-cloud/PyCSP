@@ -1,0 +1,34 @@
+.. figure:: _static/pymatsci.png
+   :alt: pymatsci
+   :align: center
+
+Welcome to PyCSP's documentation!
+#################################
+
+**PyCSP**  (Python-based Crystal Structure Prediction) is a robust, open-source Python library 
+for Crystal Structure Prediction. PyCSP is dedicated to quick and easy operations, so that people 
+can get the results they want without taking too much time.
+
+Check out the :doc:`./usage/index` section for further information, including how to :doc:`\ install` 
+the project. Of course, you can also click `here <https://pyCSP.readthedocs.io/_/downloads/en/latest/pdf/>`_ 
+for a pdf instruction.
+
+.. note::
+
+   The PySCP is under active development.
+
+:Authors: C.L. Qin
+
+:Version: v0.0 
+
+.. toctree::
+   :maxdepth: 1
+   :numbered:
+   :caption: Contents:
+
+   introduction/index
+   install
+   tutorials/index
+   in_out/index
+   inputs/index
+   citations

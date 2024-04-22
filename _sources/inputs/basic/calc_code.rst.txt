@@ -1,0 +1,36 @@
+calculator
+**********
+
+---------
+
+**calculator** = 1|2 [integer]>0
+
+Usage: **calculator** = 1 | **calculator** = 1 2 | **calculator** = 1 2 1 et al.
+
+Default: **calculator** = 1
+
+Description: **calculator** determines which calculation code is used for structural optimization.
+
+Tag options:
+
+- **calculator** = 1: `VASP <https://www.vasp.at/>`_
+
+- **calculator** = 2: `MATGL <https://matgl.ai/>`_
+
+----------
+
+How to set calculator
+
+The calculator can contain more than one number to represent multiple structural optimizations. 
+For example, "calculator = 1 1 1" means that 3 structural optimizations are performed using calculator1.
+
+A calculator can contain a mixture of numbers, indicating that the structure is optimized with a different
+calculator each time. For example, "calculator = 2 1" means that the structure is first optimized by 
+calculator2 and then by calculator1.
+
+.. warning::
+
+    If "calculator = 2" (empirical potential) is used for the last structural optimization, the accuracy of the 
+    results may be affected. Therefore it is recommended to "calculator1" last.
+
+----------

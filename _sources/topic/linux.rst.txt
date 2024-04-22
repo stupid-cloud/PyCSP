@@ -1,0 +1,40 @@
+提取多个文件的信息
+
+ .. code:: bash
+
+    for i in *;do echo $i;grep 'reached required accuracy' $i/OUTCAR;done # 检查任务完成没
+    for i in `seq 1 20`;do echo -n $i-* >> data.txt;grep without $i-*/OUTCAR | tail -n 1 | awk '{printf "\t" $7 "\n"}' >> data.txt;done # 提取总能量
+    for i in `seq 1 20`;do echo -n $i-* >> data.txt;cd $i-*;echo -e '201\n' | pymatsci | grep surf_area | awk '{print "\t" $3}' >> ../data.txt;cd ..;done # 获取表面积
+    for i in `seq 1 20`;do echo -n $i-* >> data.txt;cd $i-*;echo -e '201\n' | pymatsci | grep atoms_num | awk '{print "\t" $3}' >> ../data.txt;cd ..;done # 获取原子数
+    for i in `seq 1 20`;do echo -n $i-* >> data.txt;cd $i-*;echo -e '426\n3'| vaspkit | grep "Work Function" | awk '{print "\t" $4}' >> ../data.txt;cd ..;done # 获取功函数
+
+AIMD提取信息
+
+1.ML-AIMD提取能量
+
+.. code:: bash
+
+    #!/bin/bash
+    awk '/free  energy/ {print}' OUTCAR | 
+    awk '
+        BEGIN     {i=1;buffer="";OFS="\t"}
+        /free  energy   TOTEN/  { print i++,$(NF-1); buffer = ""; next}
+            {
+            if (buffer != "") {
+                print i++,buffer
+                }
+        buffer = $(NF-1)
+                }
+        END       { 
+            if (match($(NF-1), "^free  energy   TOTEN") == 0) {
+                print i, buffer
+                }
+            }
+
+2.提取温度
+
+.. code:: bash
+
+    grep "T=" DS-PAW.log | awk '{print $3}' | awk -F. '{print NR"\t"$1}' > data.txt
+
+

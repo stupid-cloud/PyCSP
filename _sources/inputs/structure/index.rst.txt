@@ -1,0 +1,25 @@
+structure
+---------
+
+.. csv-table::
+    :header: "Params", "Quantity", 'Default', "Description"
+    :widths: 10, 10, 10, 10
+    :width: 40
+
+    :doc:`./calc_code`, "1~2", "1", "选择结构性质计算的软件包"
+    :doc:`./algo`, "1~2", "1", "选择结构性质计算的软件包"
+    :doc:`./tot_struc`, "1~2", "1", "选择结构性质计算的软件包"
+    :doc:`./nstage`, "1~2", "1", "选择结构性质计算的软件包"
+    :doc:`./njog`, "1~2", "1", "选择结构性质计算的软件包"
+    
+
+
+.. toctree::
+    :maxdepth: 0
+    :hidden:
+
+    calc_code
+    algo
+    tot_struc
+    nstage
+    njog

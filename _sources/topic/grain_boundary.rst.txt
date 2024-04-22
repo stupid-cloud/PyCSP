@@ -1,0 +1,67 @@
+1.创建晶界模型
+
+.. code:: python
+
+    from pymatsci.grain_boundary import generate_gb_hex, get_TGB, generate_grid
+    props_lsit, gb_model_list = generate_gb_hex('CONTCAR')
+    gb_list = get_TGB(gb_model_list[0], repeat_time=2)
+    gb_list[1].write('POSCAR')
+
+2.晶界模型的势能面
+
+.. code:: python
+
+    from pymatsci.grain_boundary import generate_gb_hex, get_TGB, generate_grid
+    props_lsit, gb_model_list = generate_gb_hex('CONTCAR')
+    gb_list = get_TGB(gb_model_list[0], repeat_time=2)
+    gb_list[1].write('POSCAR')
+    generate_grid(gb_list[1])
+
+3.势能面的提取
+
+ .. code:: bash
+
+    # 1.检查任务完成没
+    for i in *;do echo $i;grep 'Total CPU ' $i/OUTCAR;done
+    # 2.提取x,y,z,E
+    for i in *;do echo -n $i | awk -F_ '{printf "%s %s %s ", $1,$2,$3}' >> data.txt; grep without $i/OUTCAR | tail -n 1 | awk '{printf " " $NF "\n"}' >> data.txt;done
+
+4.势能面的处理
+
+.. code:: python
+
+    import numpy as np
+    data = np.loadtxt('data.txt')
+    min_index = np.argmin(data[:, 3])
+    print(data[min_index, :])
+    # z方向最小的筛选
+    z_num = len(np.unique(data[:, 2]))  # z方向的插值个数
+    index_array = []
+    for i in range(int(data.shape[0]/3)):
+        min_index = np.argmin(data[i * 3:(i + 1) * 3, 3], axis=0)
+        index = i * 3 + min_index
+        index_array.append(index)
+    new_data = data[index_array]
+
+    # 添加对称的数据
+    x_num = np.unique(data[:, 0])
+    for i in x_num[1:-1]:
+        tem_data = new_data[new_data[:, 0] == i]
+        tem_data[:, 0] = 1-i
+        new_data = np.vstack((new_data, tem_data))
+
+    # 添加数据
+    # print(new_data)
+    tem_data = new_data[new_data[:, 0] == 0]
+    tem_data[:, 0] = 1
+    new_data = np.vstack((new_data, tem_data))
+    tem_data = new_data[new_data[:, 1] == 0]
+    tem_data[:, 1] = 1
+    new_data = np.vstack((new_data, tem_data))
+    new_data = new_data[new_data[:, 0].argsort()]
+
+    np.savetxt('test.txt', new_data)
+
+
+
+

@@ -1,0 +1,14 @@
+nstage
+******
+
+**nstage** = 1|2 [integer]>0
+
+Default **nstage** = 1
+
+Description: **nstage** determines how the partial occupancies
+
+Tag options:
+
+- **nstage** = 1: VASP
+
+- **nstage** = 2: MATGL
